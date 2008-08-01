@@ -1,18 +1,20 @@
 class FlowMeter < ActiveRecord::Base
-  before_validation :set_default_status
+  before_save :set_default_status
   
   validates_presence_of :catch_url, :on => :create, :message => "can't be blank"
   validates_presence_of :redirect_url, :on => :create, :message => "can't be blank"
-  
-  validates_format_of :catch_url, 
-    :with => /\A(\/admin){0}/, 
-    :on => :create, 
-    :message => "cannot catch the admin url", 
-    :allow_blank => true
+    
+  validate :catch_url_not_restricted
     
   protected
   
   def set_default_status
-    status = '307' if status.blank?
+    self.status = '307' if self.status.blank?
+  end
+  
+  def catch_url_not_restricted
+    if catch_url =~ %r{\A\/?(admin)}
+      errors.add(:catch_url, 'cannot catch the admin url')
+    end
   end
 end
