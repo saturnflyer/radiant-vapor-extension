@@ -1,10 +1,24 @@
-%h2 Redirects
-- @flow_meters.each do |fm|
-  %p= "#{fm.catch_url} => #{fm.redirect_url} #{fm.status}"
-  %p= link_to "Delete #{fm.catch_url}", admin_flow_meter_path(fm), :method => :delete
-- form_for @flow_meter, :url => admin_flow_meters_path do |fm|
-  %p= fm.text_field :catch_url
-  %p= fm.text_field :redirect_url
-  %p= fm.text_field :status
-  %p= submit_tag "Create"
-%p hi
+%h2 Vapor Redirects
+%p With vapor redirects you can create URLs that will point to content elsewhere on your site.
+- form_for @flow_meter, :url => admin_flow_meters_path do |f|
+  - error_messages_for :flow_meter
+  %table.index
+    %thead
+      %tr
+        %th Catch URL
+        %th Redirect URL
+        %th Status
+        %th Action
+    %tbody
+    - @flow_meters.each do |flow_meter|
+      %tr
+        %td= flow_meter.catch_url
+        %td= flow_meter.redirect_url
+        %td= flow_meter.status
+        %td= link_to "Delete #{flow_meter.catch_url}", admin_flow_meter_path(flow_meter), :method => :delete
+    %tr
+      %td= f.text_field :catch_url
+      %td= f.text_field :redirect_url
+      %td= f.text_field :status
+      %td= submit_tag "Create"
+  
