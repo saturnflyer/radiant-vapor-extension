@@ -33,4 +33,11 @@ describe FlowMeter do
     @flow_meter.valid?
     @flow_meter.errors.on(:catch_url).should match(/cannot catch the admin url/)
   end
+  
+  it "should err with a non-unique catch_url" do
+    @flow_meter.save
+    @flow_meter2 = FlowMeter.new(:catch_url => @flow_meter.catch_url, :redirect_url => '/other')
+    @flow_meter2.valid?
+    @flow_meter2.errors.on(:catch_url).should match(/has already been taken/)
+  end
 end

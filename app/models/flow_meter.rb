@@ -3,6 +3,8 @@ class FlowMeter < ActiveRecord::Base
   
   validates_presence_of :catch_url, :on => :create, :message => "can't be blank"
   validates_presence_of :redirect_url, :on => :create, :message => "can't be blank"
+  
+  validates_uniqueness_of :catch_url
     
   validate :catch_url_not_restricted
     
