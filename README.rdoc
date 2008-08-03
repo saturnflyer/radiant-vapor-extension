@@ -4,7 +4,7 @@ The Vapor extension provides an interface to redirect URLs.
 
 Installing Vapor is as easy as any other Radiant extension. Drop it into your vendor/extensions directory and:
 
-rake radiant:extensions:help:migrate
+rake radiant:extensions:vapor:migrate
 
 See the HELP_admin.md for more details.
 
