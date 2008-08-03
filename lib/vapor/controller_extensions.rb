@@ -3,7 +3,6 @@ module Vapor::ControllerExtensions
     base.class_eval { alias_method_chain :show_page, :vapor }
   end
 
-  # This will break if the real show_page changes in Radiant
   def show_page_with_vapor
     response.headers.delete('Cache-Control')
 
