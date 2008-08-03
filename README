@@ -1,5 +1,11 @@
 = Vapor
 
-The Vapor extension provides an interface to redirect URLs.
+The Vapor extension provides an interface to redirect URLs. 
+
+Installing Vapor is as easy as any other Radiant extension. Drop it into your vendor/extensions directory and:
+
+rake radiant:extensions:help:migrate
+
+See the HELP_admin.md for more details.
 
 built by Saturn Flyer http://www.saturnflyer.com
