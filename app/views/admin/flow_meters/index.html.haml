@@ -1,7 +1,6 @@
-%h2 Vapor Redirects
-%p With vapor redirects you can create URLs that will point to content elsewhere on your site.
+%h2 Redirects
+%p With redirects you can create URLs that will point to content elsewhere on your site. Your 'Catch URL' is the part of the URL that will be processed to redirect to the final destination of your 'Redirect URL'.
 - form_for @flow_meter, :url => admin_flow_meters_path do |f|
-  - error_messages_for :flow_meter
   %table.index
     %thead
       %tr
@@ -15,7 +14,7 @@
         %td= flow_meter.catch_url
         %td= flow_meter.redirect_url
         %td= flow_meter.status
-        %td= link_to "Delete #{flow_meter.catch_url}", admin_flow_meter_path(flow_meter), :method => :delete
+        %td= link_to "Delete", admin_flow_meter_path(flow_meter), :method => :delete
     %tr
       %td= f.text_field :catch_url
       %td= f.text_field :redirect_url
