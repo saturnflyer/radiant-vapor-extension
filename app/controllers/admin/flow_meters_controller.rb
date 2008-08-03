@@ -1,14 +1,15 @@
 class Admin::FlowMetersController < ApplicationController
+  
   def index
-    @flow_meters = FlowMeter.find(:all)
     @flow_meter = FlowMeter.new
+    @flow_meters = FlowMeter.find(:all)
   end
   
   def create
     @flow_meter = FlowMeter.create!(params[:flow_meter])
     redirect_to admin_flow_meters_url
-  rescue ActiveRecord::RecordInvalid
-    flash[:notice] = "oops"
+  rescue ActiveRecord::RecordInvalid => e
+    flash[:error] = "#{e.message}"
     redirect_to admin_flow_meters_url
   end
   
