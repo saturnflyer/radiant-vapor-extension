@@ -11,8 +11,8 @@
     %tbody
     - @flow_meters.each do |flow_meter|
       %tr
-        %td= flow_meter.catch_url
-        %td= flow_meter.redirect_url
+        %td= flow_meter.catch_url_for_display
+        %td= flow_meter.redirect_url_for_display
         %td= flow_meter.status
         %td= link_to "Delete", admin_flow_meter_path(flow_meter), :method => :delete
     %tr

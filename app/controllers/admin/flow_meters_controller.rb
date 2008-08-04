@@ -11,6 +11,9 @@ class Admin::FlowMetersController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     flash[:error] = "#{e.message}"
     redirect_to admin_flow_meters_url
+  rescue FlowMeter::DataMismatch => e
+    flash[:error] = "#{e.message}"
+    redirect_to admin_flow_meters_url
   end
   
   def destroy
