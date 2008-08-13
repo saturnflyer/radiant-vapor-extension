@@ -4,8 +4,7 @@ With Vapor you can create URLs that will point users to other locations.
 
 Vapor manages the redirection in objects called flow meters. In each flow meter you'll need to have 
 the `catch_url` (which is the URL that will be the false page) and the `redirect_url` (which is an 
-actual page on your site). By default the `status` is set to '307' (which is 'Temporarily Moved'), 
-but currently the status feature is not implemented.
+actual page on your site). By default the `status` is set to '307 Temporarily Moved'.
 
 You may also set the redirect_url to an external site beginning with 'http://'.
 
