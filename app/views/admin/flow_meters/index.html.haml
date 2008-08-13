@@ -1,5 +1,6 @@
 %h2 Redirects
 %p With redirects you can create URLs that will point to content elsewhere on your site. Your 'Catch URL' is the part of the URL that will be processed to redirect to the final destination of your 'Redirect URL'.
+%p You may use a full url for the 'Redirect URL' to direct your visitors to another site.
 - form_for @flow_meter, :url => admin_flow_meters_path do |f|
   %table.index
     %thead
@@ -18,6 +19,6 @@
     %tr
       %td= f.text_field :catch_url
       %td= f.text_field :redirect_url
-      %td= f.text_field :status
+      %td= f.select :status, ['307 Temporary Redirect','302 Found','301 Moved Permanently']
       %td= submit_tag "Create"
   

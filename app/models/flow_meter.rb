@@ -71,7 +71,7 @@ class FlowMeter < ActiveRecord::Base
   protected
   
   def set_default_status
-    self.status = '307' if self.status.blank?
+    self.status = '307 Temporarily Moved' if self.status.blank?
   end
   
   def clean_catch_url

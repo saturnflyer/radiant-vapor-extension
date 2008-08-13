@@ -18,9 +18,9 @@ describe FlowMeter do
     @flow_meter.errors.on(:redirect_url).should match(/can't be blank/)
   end
   
-  it "should set '307' as the status if created with no status" do
+  it "should set '307 Temporarily Moved' as the status if created with no status" do
     @flow_meter.save!
-    @flow_meter.status.should == '307'
+    @flow_meter.status.should == '307 Temporarily Moved'
   end
   
   it "should err with a catch_url beginning with 'admin'" do
@@ -103,7 +103,7 @@ describe FlowMeter do
 
   it "should load save all flow_meters into FlowMeter.all, a Hash with the catch_url as the key, and an array of redirect_url and status as the value" do
     @flow_meter.save
-    FlowMeter.all.should == {'stuff' => ['things', '307']}
+    FlowMeter.all.should == {'stuff' => ['things', '307 Temporarily Moved']}
   end
   
   it "should reload FlowMeter.all after destroying a flow_meter" do
