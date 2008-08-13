@@ -13,12 +13,15 @@ module Vapor::ControllerExtensions
       url = url.to_s
     end
     
-    a_match = FlowMeter.find_by_catch_url(url)
-    unless a_match.nil?
-      url = a_match.redirect_url
+    a_match = FlowMeter.all[url]
+    unless a_match.blank?
+      url = a_match[0]
       if (request.get? || request.head?) and live? and (@cache.response_cached?(url))
-        @cache.update_response(url, response, request)
-        @performed_render = true
+        if url.match('http://')
+          redirect_to url
+        else
+          redirect_to site_url(url)
+        end
       else
         show_uncached_page(url)
       end
