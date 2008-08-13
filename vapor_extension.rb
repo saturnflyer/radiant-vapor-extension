@@ -9,7 +9,6 @@ class VaporExtension < Radiant::Extension
     map.namespace :admin do |admin|
       admin.resources 'flow_meters'
     end
-    map.site '/:url', :controller => 'site', :action => 'show_page'
   end
   
   def activate

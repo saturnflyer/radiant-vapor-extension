@@ -4,27 +4,17 @@ module Vapor::ControllerExtensions
   end
 
   def show_page_with_vapor
-    response.headers.delete('Cache-Control')
-
     url = params[:url]
     if Array === url
       url = url.join('/')
     else
       url = url.to_s
     end
-    
     a_match = FlowMeter.all[url]
-    unless a_match.blank?
+    unless a_match.nil?
       url = a_match[0]
-      if (request.get? || request.head?) and live? and (@cache.response_cached?(url))
-        if url.match('http://')
-          redirect_to url
-        else
-          redirect_to site_url(url)
-        end
-      else
-        show_uncached_page(url)
-      end
+      location = url.match('http://') ? url : url_for(:controller => 'site', :action => 'show_page', :url => url)
+      redirect_to location, :status => a_match[1].to_s
     else
       show_page_without_vapor
     end
