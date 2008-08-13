@@ -4,6 +4,8 @@ class FlowMeter < ActiveRecord::Base
   before_save :set_default_status
   after_validation :clean_catch_url
   after_validation :clean_redirect_url
+  after_save :initialize_all
+  after_destroy :initialize_all
   
   validates_presence_of :catch_url, :on => :create, :message => "can't be blank"
   validates_presence_of :redirect_url, :on => :create, :message => "can't be blank"
@@ -12,6 +14,31 @@ class FlowMeter < ActiveRecord::Base
     
   validate :catch_url_not_restricted
   validate :redirect_url_not_restricted
+  
+  @@all = {}
+  
+  def self.all
+    @@all
+  end
+  
+  def all
+    @@all
+  end
+  
+  def all=(all_hash)
+    @@all = all_hash
+  end
+  
+  def initialize_all
+    FlowMeter.initialize_all
+  end
+  
+  def self.initialize_all
+    @@all = {}
+    FlowMeter.find(:all).each do |fm|
+      @@all[fm[:catch_url]] = [fm[:redirect_url], fm[:status]]
+    end
+  end
   
   def display_url(att)
     self[att] == '/' ? cleaned_up_url(att) : "/#{cleaned_up_url(att)}"
@@ -52,7 +79,7 @@ class FlowMeter < ActiveRecord::Base
   end
   
   def clean_redirect_url
-    clean_url(:redirect_url) unless redirect_url.blank?
+    clean_url(:redirect_url) unless redirect_url.blank? or redirect_url.match('http://')
   end
   
   def clean_url(att)

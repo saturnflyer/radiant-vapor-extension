@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FlowMeter do
   before(:each) do
+    # FlowMeter.all = {}
     @flow_meter = FlowMeter.new(:catch_url => "/stuff", :redirect_url => '/things', :status => '')
   end
 
@@ -80,6 +81,12 @@ describe FlowMeter do
     @flow_meter.save
     @flow_meter.redirect_url.should == '/'
   end
+  
+  it "should allow a redirect_url formatted like 'http://www.saturnflyer.com/'" do
+    @flow_meter.redirect_url = 'http://www.saturnflyer.com/'
+    @flow_meter.save!
+    @flow_meter.redirect_url.should == 'http://www.saturnflyer.com/'
+  end
 
   it "should provide a catch_url_for_display which includes a leading slash" do
     @flow_meter.catch_url_for_display.should == '/stuff'
@@ -92,5 +99,18 @@ describe FlowMeter do
   it "should err with 'Catch URL and Redirect URL may not be the same.' when given a catch_url that matches the redirect_url" do
     @flow_meter.redirect_url = "/stuff"
     lambda {@flow_meter.save!}.should raise_error(FlowMeter::DataMismatch, "Catch URL and Redirect URL may not be the same.")
+  end
+
+  it "should load save all flow_meters into FlowMeter.all, a Hash with the catch_url as the key, and an array of redirect_url and status as the value" do
+    @flow_meter.save
+    FlowMeter.all.should == {'stuff' => ['things', '307']}
+  end
+  
+  it "should reload FlowMeter.all after destroying a flow_meter" do
+    @flow_meter.save
+    @flow_meter2 = FlowMeter.new(:catch_url => 'old', :redirect_url => 'new')
+    @flow_meter2.save
+    @flow_meter.destroy
+    FlowMeter.all.should == {'old' => ['new', '307']}
   end
 end
