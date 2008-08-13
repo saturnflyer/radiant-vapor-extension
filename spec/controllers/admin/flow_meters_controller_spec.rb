@@ -63,6 +63,7 @@ describe Admin::FlowMetersController do
     end
     
     it "should find the flow_meter" do
+      FlowMeter.stub!(:find).with(:all).and_return([@flow_meter])
       FlowMeter.should_receive(:find).with(@flow_meter.id.to_s).and_return(@flow_meter)
       delete :destroy, :id => @flow_meter.id
     end
