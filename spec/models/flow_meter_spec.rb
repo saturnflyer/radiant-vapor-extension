@@ -95,6 +95,11 @@ describe FlowMeter do
   it "should provide a redirect_url_for_display which includes a leading slash" do
     @flow_meter.redirect_url_for_display.should == '/things'
   end
+  
+  it "should provide the actual redirect_url_for_display if it begins with 'http://'" do
+    @flow_meter.redirect_url = "http://www.saturnflyer.com"
+    @flow_meter.redirect_url_for_display.should == "http://www.saturnflyer.com"
+  end
 
   it "should err with 'Catch URL and Redirect URL may not be the same.' when given a catch_url that matches the redirect_url" do
     @flow_meter.redirect_url = "/stuff"
