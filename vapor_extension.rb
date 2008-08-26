@@ -17,7 +17,7 @@ class VaporExtension < Radiant::Extension
     SiteController.send :include, Vapor::ControllerExtensions
     
     if admin.help
-      admin.help.index.add :page_details, 'slug_redirect', :after => :slug
+      admin.help.index.add :page_details, 'slug_redirect', :after => 'slug'
     end
   end
   
