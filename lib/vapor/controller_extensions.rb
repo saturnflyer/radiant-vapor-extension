@@ -14,7 +14,7 @@ module Vapor::ControllerExtensions
     unless a_match.nil?
       url = a_match[0]
       location = url.match('http://') ? url : url_for(:controller => 'site', :action => 'show_page', :url => url)
-      redirect_to location, :status => a_match[1].to_s
+      redirect_to location, :status => a_match[1].to_s and return
     else
       show_page_without_vapor
     end
