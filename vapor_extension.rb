@@ -16,7 +16,7 @@ class VaporExtension < Radiant::Extension
     FlowMeter.initialize_all if ActiveRecord::Base.connection.tables.include?('flow_meters')
     SiteController.send :include, Vapor::ControllerExtensions
     
-    if admin.help
+    if admin.respond_to? :help
       admin.help.index.add :page_details, 'slug_redirect', :after => 'slug'
     end
   end
