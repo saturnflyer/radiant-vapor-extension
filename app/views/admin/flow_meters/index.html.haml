@@ -1,5 +1,7 @@
-%h2 Redirects
+%h1 Redirects
 %p With redirects you can create URLs that will point to content elsewhere on your site. Your 'Catch URL' is the part of the URL that will be processed to redirect to the final destination of your 'Redirect URL'.
+- if config['vapor.use_regexp'] == 'true'
+  %p If the incoming request begins with any of your defined 'Catch URLs', the visitor will be redirected to the corresponding  'Redirect URL'. This means that you may protect an entire tree of your site simply by specifying the beginning of the URL.
 %p You may use a full url for the 'Redirect URL' to direct your visitors to another site.
 - form_for @flow_meter, :url => admin_flow_meters_path do |f|
   %table.index
