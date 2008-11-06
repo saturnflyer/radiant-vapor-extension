@@ -8,6 +8,17 @@ actual page on your site). By default the `status` is set to '307 Temporarily Mo
 
 You may also set the redirect_url to an external site beginning with 'http://'.
 
+## What to Catch
+
+You have some options with Vapor. 
+
+By default, each flow meter that you create will only match against
+the exact url. This means that a `catch_url` of `/articles` will not redirect for a url of 
+`/articles/2008/09/19/third-post/`.
+
+To change this, you may set `Radiant::Config['vapor.use_regexp'] = 'true'`. This will catch any url
+that begins with the given `catch_url`.
+
 ## Where and When
 
 Vapor is a simple solution to allow your users to manage and edit URL redirection themselves. Long-term 
