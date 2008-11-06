@@ -1,22 +1,31 @@
 module Vapor::ControllerExtensions
   def self.included(base)
-    base.class_eval { alias_method_chain :show_page, :vapor }
+    base.class_eval { before_filter :apply_flow_meters }
   end
-
-  def show_page_with_vapor
+  
+  def apply_flow_meters
     url = params[:url]
     if Array === url
       url = url.join('/')
     else
       url = url.to_s
     end
-    a_match = FlowMeter.all[url]
-    unless a_match.nil?
-      url = a_match[0]
-      location = url.match('http://') ? url : url_for(:controller => 'site', :action => 'show_page', :url => url)
-      redirect_to location, :status => a_match[1].to_s and return
+    if config['vapor.use_regexp'] == 'true'
+      FlowMeter.all.each do |key, value|
+        if url.match(Regexp.new('^'+key))
+          redirect_url = value[0]
+          location = redirect_url.match('http://') ? redirect_url : url_for(:controller => 'site', :action => 'show_page', :url => redirect_url)
+          redirect_to location, :status => value[1].to_s and return
+        end
+      end
     else
-      show_page_without_vapor
+      a_match = FlowMeter.all[url]
+      unless a_match.nil?
+        redirect_url = a_match[0]
+        location = url.match('http://') ? redirect_url : url_for(:controller => 'site', :action => 'show_page', :url => redirect_url)
+        redirect_to location, :status => a_match[1].to_s and return
+      end
     end
   end
+
 end
