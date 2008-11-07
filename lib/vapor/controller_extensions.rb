@@ -11,7 +11,9 @@ module Vapor::ControllerExtensions
       url = url.to_s
     end
     if config['vapor.use_regexp'] == 'true'
-      FlowMeter.all.each do |key, value|
+      FlowMeter.all.sort.reverse.each do |meter|
+        key = meter[0]
+        value = meter[1]
         if url.match(Regexp.new('^'+key))
           redirect_url = value[0]
           location = redirect_url.match('http://') ? redirect_url : url_for(:controller => 'site', :action => 'show_page', :url => redirect_url)
