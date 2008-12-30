@@ -58,6 +58,7 @@ class FlowMeter < ActiveRecord::Base
   
   def cleaned_up_url(att)
     new_att = self[att].gsub(%r{//+},'/').gsub(%r{\s+},'')
+    new_att.gsub!(%r{\/$},'') unless new_att == '/'
     new_att.gsub!(%r{^/},'') unless new_att == '/'
     new_att
   end

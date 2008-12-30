@@ -64,6 +64,12 @@ describe FlowMeter do
     @flow_meter.redirect_url.should == 'chop'
   end
   
+  it "should remove a trailing slash from the catch_url before saving" do
+    @flow_meter.catch_url = '/no_trailing_slash/'
+    @flow_meter.save
+    @flow_meter.catch_url.should == 'no_trailing_slash'
+  end
+  
   it "should remove all whitespace from catch_url before saving" do
     @flow_meter.catch_url = "hello there"
     @flow_meter.save
@@ -107,6 +113,7 @@ describe FlowMeter do
   end
 
   it "should load save all flow_meters into FlowMeter.all, a Hash with the catch_url as the key, and an array of redirect_url and status as the value" do
+    FlowMeter.destroy_all
     @flow_meter.save
     FlowMeter.all.should == {'stuff' => ['things', '307 Temporarily Moved']}
   end
