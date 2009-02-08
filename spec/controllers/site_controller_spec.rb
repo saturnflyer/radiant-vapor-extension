@@ -6,8 +6,9 @@ describe SiteController do
   before(:each) do
     login_as :admin
     controller.cache.clear
-    @flow_meters = {"this" => ["that", "307"]}
+    @flow_meters = {"this" => ["that", "307"], "this2" => ["blog/2005/01/01/some-post", "307"]}
     @flow_meter = FlowMeter.create!(:catch_url => 'this', :redirect_url => 'that')
+    @flow_meter = FlowMeter.create!(:catch_url => 'this2', :redirect_url => 'blog/2005/01/01/some-post')    
     FlowMeter.initialize_all
     
     # @wildcard = mock_model(FlowMeter)
@@ -19,6 +20,10 @@ describe SiteController do
       get :show_page, :url => 'this'
       response.should be_redirect
     end
+    it "should redirect to the given Redirect URL" do
+      get :show_page, :url => 'this2'
+      response.should redirect_to('blog/2005/01/01/some-post')
+    end    
     it "should set the response status to the given Status" do
       get :show_page, :url => 'this'
       response.headers["Status"].should =~ /307/
