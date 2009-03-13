@@ -17,7 +17,10 @@ the exact url. This means that a `catch_url` of `/articles` will not redirect fo
 `/articles/2008/09/19/third-post/`.
 
 To change this, you may set `Radiant::Config['vapor.use_regexp'] = 'true'`. This will catch any url
-that _begins_ with the given `catch_url`. 
+that _begins_ with the given `catch_url`. The `catch_url` in this case is a regular expression, and
+the `redirect_url` may contain substitution variables like $0 (the matched string), $1 (the first
+match
+group), and so on.
 
 You may also nest your flow meters with this setting. Setting `/about` to redirect to `/us` and `/about/team` to 
 redirect to `/team` will work. When the `vapor.use_regexp` option is set, the flow meters will be

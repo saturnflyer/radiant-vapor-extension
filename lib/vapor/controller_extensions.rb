@@ -14,8 +14,8 @@ module Vapor::ControllerExtensions
       FlowMeter.all.sort.reverse.each do |meter|
         key = meter[0]
         value = meter[1]
-        if url.match(Regexp.new('^'+key))          
-          redirect_url = value[0]
+        if (match = url.match(Regexp.new('^'+key)))
+          redirect_url = match_substitute(value[0], match)
           location = redirect_url.match('http://') ? redirect_url : url_for(:controller => 'site', :action => 'show_page', :url => redirect_url)
           redirect_to CGI.unescape(location), :status => value[1].to_s and return
         end
@@ -30,4 +30,17 @@ module Vapor::ControllerExtensions
     end
   end
 
+private
+  
+  def match_substitute(string, match)
+    string.gsub(/\$([`&0-9'$])/) do |sub|
+      case $1
+      when "`": match.pre_match
+      when "&": match[0]
+      when "0".."9": puts $1.to_i; match[$1.to_i]
+      when "'": match.post_match
+      when "$": '$'
+      end
+    end
+  end
 end
