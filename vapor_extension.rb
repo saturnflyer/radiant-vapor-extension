@@ -1,7 +1,7 @@
-require_dependency 'application'
+require_dependency 'application_controller'
 
 class VaporExtension < Radiant::Extension
-  version "1.0"
+  version "2.0"
   description "Manage redirects without creating useless pages"
   url "http://saturnflyer.com/"
   
@@ -14,7 +14,6 @@ class VaporExtension < Radiant::Extension
   def activate
     admin.tabs.add "Redirects", "/admin/flow_meters", :after => "Layouts", :visibility => [:admin]
     FlowMeter.initialize_all if ActiveRecord::Base.connection.tables.include?('flow_meters')
-    SiteController.send :include, Vapor::ControllerExtensions
     
     if admin.respond_to? :help
       admin.help.index.add :page_details, 'slug_redirect', :after => 'slug'
