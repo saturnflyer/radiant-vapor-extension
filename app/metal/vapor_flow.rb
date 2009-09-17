@@ -6,10 +6,10 @@ class VaporFlow
   class << self  
     def call(env)
       url = env["PATH_INFO"].sub(/^\//,'') #clean off the first slash, like it is stored in the db
-      sql = "SELECT * FROM config where key = 'vapor.use_regexp'"
+      sql = "SELECT * FROM config where `key` = 'vapor.use_regexp'"
       if @@use_regexp.nil?
         config_key = Radiant::Config.connection.select_one(sql)
-        @@use_regexp = (config_key && config_key.value == 'true') ? true : false
+        @@use_regexp = (config_key && config_key['value'] == 'true') ? true : false
       end
       if @@use_regexp
         catch_with_regexp(url)
@@ -39,6 +39,7 @@ class VaporFlow
     end
    
     def catch_with_regexp(url)
+      result = nil
       FlowMeter.all.sort.reverse.each do |meter|
         key = meter[0]
         value = meter[1]
@@ -48,10 +49,11 @@ class VaporFlow
           [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
           break
         else
-          self.send_to_radiant
+          result = self.send_to_radiant
           break
         end
       end
+      result
     end
     
     def catch_without_regexp(url)
