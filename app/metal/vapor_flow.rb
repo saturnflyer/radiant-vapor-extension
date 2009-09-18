@@ -46,7 +46,7 @@ class VaporFlow
         if (match = url.match(Regexp.new('^'+key)))
           status = value[1].to_i
           redirect_url = self.match_substitute(value[0], match)
-          [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
+          result = [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
           break
         else
           result = self.send_to_radiant
