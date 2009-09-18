@@ -50,7 +50,6 @@ class VaporFlow
           break
         else
           result = self.send_to_radiant
-          break
         end
       end
       result
