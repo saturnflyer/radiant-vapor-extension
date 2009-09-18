@@ -12,7 +12,7 @@ class VaporExtension < Radiant::Extension
   end
   
   def activate
-    admin.tabs.add "Redirects", "/admin/flow_meters", :after => "Layouts", :visibility => [:admin]
+    admin.tabs.add "Redirects", "/admin/flow_meters", :after => "Layouts", :visibility => [:admin, :developer]
     FlowMeter.initialize_all if ActiveRecord::Base.connection.tables.include?('flow_meters')
     
     if admin.respond_to? :help
