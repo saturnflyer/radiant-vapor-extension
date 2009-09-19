@@ -5,8 +5,12 @@ class VaporFlow
   @@use_regexp = nil
   class << self  
     def call(env)
+      if env["PATH_INFO"].blank?
+        return send_to_radiant
+      end
       url = env["PATH_INFO"].sub(/^\//,'') #clean off the first slash, like it is stored in the db
-      sql = "SELECT * FROM config where `key` = 'vapor.use_regexp'"
+      db_escaped_key = ActiveRecord::Base.connection.adapter_name =~ /mysql/i ? '`key`' : 'key'
+      sql = "SELECT * FROM config where #{db_escaped_key} = 'vapor.use_regexp'"
       if @@use_regexp.nil?
         config_key = Radiant::Config.connection.select_one(sql)
         @@use_regexp = (config_key && config_key['value'] == 'true') ? true : false
@@ -46,13 +50,13 @@ class VaporFlow
         if (match = url.match(Regexp.new('^'+key)))
           status = value[1].to_i
           redirect_url = self.match_substitute(value[0], match)
-          result = [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
+          return [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
           break
         else
           result = self.send_to_radiant
         end
       end
-      result
+      return result
     end
     
     def catch_without_regexp(url)
