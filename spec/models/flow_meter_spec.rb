@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FlowMeter do
+  dataset :pages
   before(:each) do
     # FlowMeter.all = {}
     @flow_meter = FlowMeter.new(:catch_url => "/stuff", :redirect_url => '/things', :status => '')
@@ -124,5 +125,22 @@ describe FlowMeter do
     @flow_meter2.save
     @flow_meter.destroy
     FlowMeter.all.should == {'old' => ['new', '307']}
+  end
+
+  describe "self.find_for_page" do
+    it "should return nil if no flow_meter matches for the page" do
+      FlowMeter.find_for_page(pages(:home)).should be_nil
+    end
+    it "should return the first flow_meter found that matches the page url" do
+      @redirector = FlowMeter.create!({:catch_url => '/first', :redirect_url => '/another', :status => '307'})
+      FlowMeter.find_for_page(pages(:first)).should == @redirector
+    end
+    describe "while vapor.use_regexp" do
+      it "should return the first flow_meter found that matches the page url" do
+        Radiant::Config['vapor.use_regexp'] = 'true'
+        @redirector = FlowMeter.create!({:catch_url => '/fi\w', :redirect_url => '/another', :status => '307'})
+        FlowMeter.find_for_page(pages(:first)).should == @redirector
+      end
+    end
   end
 end

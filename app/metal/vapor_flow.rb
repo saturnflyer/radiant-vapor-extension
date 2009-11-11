@@ -1,6 +1,8 @@
 require 'cgi'
 
 class VaporFlow
+  include Vaporizer
+  
   # Radiant must be restarted if the configuration changes for this setting
   @@use_regexp = nil
   class << self  
@@ -21,26 +23,6 @@ class VaporFlow
         catch_without_regexp(url)
       end
     end
-  
-    def match_substitute(string, match)
-      string.gsub(/\$([`&0-9'$])/) do |sub|
-        case $1
-        when "`": match.pre_match
-        when "&": match[0]
-        when "0".."9": puts $1.to_i; match[$1.to_i]
-        when "'": match.post_match
-        when "$": '$'
-        end
-      end
-    end
-  
-    def radiant_path(redirect_url)
-      '/' + redirect_url
-    end
-    
-    def local_or_external_path(path)
-      path.match(/https?:\/\//) ? path : self.radiant_path(path)
-    end
    
     def catch_with_regexp(url)
       result = nil
@@ -50,7 +32,7 @@ class VaporFlow
         if (match = url.match(Regexp.new('^'+key)))
           status = value[1].to_i
           redirect_url = self.match_substitute(value[0], match)
-          return [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
+          return [status, {"Location" => CGI.unescape(local_or_external_path(redirect_url))}, [status.to_s]]
           break
         else
           result = self.send_to_radiant
@@ -60,12 +42,12 @@ class VaporFlow
     end
     
     def catch_without_regexp(url)
-      url = url.sub(/\/$/, '') # drop the trailing slash for lookup
+      url = url.sub(/\/$/, '') unless url == '/' # drop the trailing slash for lookup
       a_match = FlowMeter.all[url]
       unless a_match.nil?
         status = a_match[1].to_i
         redirect_url = a_match[0]
-        [status, {"Location" => CGI.unescape(self.local_or_external_path(redirect_url))}, [status.to_s]]
+        [status, {"Location" => CGI.unescape(local_or_external_path(redirect_url))}, [status.to_s]]
       else
         self.send_to_radiant
       end

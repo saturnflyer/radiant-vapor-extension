@@ -1,6 +1,8 @@
 class FlowMeter < ActiveRecord::Base
   class DataMismatch < StandardError; end
   
+  include Vaporizer
+  
   before_save :set_default_status
   after_validation :clean_catch_url
   after_validation :clean_redirect_url
@@ -41,12 +43,13 @@ class FlowMeter < ActiveRecord::Base
   end
   
   def display_url(att)
-    if self[att] == '/'
-      cleaned_up_url(att)
-    elsif self[att].match('^http://')
-      self[att]
+    path = self[att]
+    if path == '/'
+      '/'
+    elsif path.match('^https?://')
+      path
     else
-      "/#{cleaned_up_url(att)}"
+      radiant_path(self.cleaned_up_path(path))
     end
   end
   
@@ -54,13 +57,6 @@ class FlowMeter < ActiveRecord::Base
     define_method "#{att.to_s}_for_display" do
       display_url(att)
     end
-  end
-  
-  def cleaned_up_url(att)
-    new_att = self[att].gsub(%r{//+},'/').gsub(%r{\s+},'')
-    new_att.gsub!(%r{\/$},'') unless new_att == '/'
-    new_att.gsub!(%r{^/},'') unless new_att == '/'
-    new_att
   end
   
   def catch_url_not_restricted
@@ -75,7 +71,50 @@ class FlowMeter < ActiveRecord::Base
     end
   end
   
+  def self.find_for_page(page)
+    if Radiant::Config['vapor.use_regexp'] == 'true'
+      match = catch_url_match_with_regexp(page.url)
+    else
+      match = catch_url_match(page.url)
+    end
+    match = self.find_by_catch_url(match) if match
+  end
+  
+  def self.redirect_url_for_page(page)
+    if Radiant::Config['vapor.use_regexp'] == true
+      FlowMeter.match_for_page_with_regexp(page).to_s
+    else
+      FlowMeter.match_for_page(page).to_s
+    end
+  end
+  
   protected
+  
+  def self.match_for_page(page)    
+    url = page.url.sub(/\/$/, '') unless url == '/' # drop the trailing slash for lookup
+    url = url.sub(/^\//, '') unless url == '/'
+    a_match = FlowMeter.all[url]
+    unless a_match.nil?
+      redirect_url = a_match[0]
+      redirect_url = '/' + redirect_url unless redirect_url.match('^https?://') || redirect_url == '/'
+      return redirect_url
+    end
+    nil
+  end
+  
+  def self.match_for_page_with_regexp(page)
+    redirect_url = nil
+    FlowMeter.all.sort.reverse.each do |meter|
+      key = meter[0]
+      value = meter[1]
+      if (match = url.match(Regexp.new('^'+key)))
+        redirect_url = match_substitute(value[0], match)
+        return redirect_url
+        break
+      end
+    end
+    redirect_url
+  end
   
   def set_default_status
     self.status = '307 Temporarily Moved' if self.status.blank?
@@ -91,7 +130,8 @@ class FlowMeter < ActiveRecord::Base
   
   def clean_url(att)
     if !self[att].blank? and !self[att].nil?
-      self.update_attribute(att, cleaned_up_url(att))
+      path = self[att]
+      self.update_attribute(att, self.cleaned_up_path(path))
     end
   end
 end

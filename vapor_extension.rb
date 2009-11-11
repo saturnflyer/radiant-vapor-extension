@@ -15,6 +15,10 @@ class VaporExtension < Radiant::Extension
     admin.tabs.add "Redirects", "/admin/flow_meters", :after => "Layouts", :visibility => [:admin]
     FlowMeter.initialize_all if ActiveRecord::Base.connection.tables.include?('flow_meters')
     
+    Page.class_eval { include PageVapor }
+    
+    admin.pages.edit.add :form, 'vapor_details', :before => 'edit_title'
+    
     if admin.respond_to? :help
       admin.help.index.add :page_details, 'slug_redirect', :after => 'slug'
     end
