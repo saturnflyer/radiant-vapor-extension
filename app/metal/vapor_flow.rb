@@ -60,6 +60,7 @@ class VaporFlow
     end
     
     def catch_without_regexp(url)
+      url = url.sub(/\/$/, '') # drop the trailing slash for lookup
       a_match = FlowMeter.all[url]
       unless a_match.nil?
         status = a_match[1].to_i
