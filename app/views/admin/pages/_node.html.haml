@@ -14,7 +14,7 @@
           - if flow_meter
             %small.info
               Redirects to
-              = link_to flow_meter.redirect_url_for_display, flow_meter.redirect_url
+              = link_to flow_meter.redirect_url_for_display, flow_meter.redirect_url_for_display
     - node.status_column do
       - unless simple
         %td.status{:class => "#{page.status.name.downcase}-status"}= page.status.name
