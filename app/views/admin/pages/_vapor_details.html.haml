@@ -1,4 +1,4 @@
-- if (flow_meter = @page.flow_meter)
+- if !@page.new_record? && (flow_meter = @page.flow_meter)
   %p
     Visitors to this page will redirected to
     = link_to flow_meter.redirect_url_for_display, flow_meter.local_or_external_redirect_url
