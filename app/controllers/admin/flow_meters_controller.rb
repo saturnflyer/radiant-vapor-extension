@@ -1,4 +1,8 @@
 class Admin::FlowMetersController < ApplicationController
+  only_allow_access_to :index, :create, :destroy,
+    :when => :admin,
+    :denied_url => { :controller => 'pages', :action => 'index' },
+    :denied_message => 'You must be an administrator to manage Redirects.'
   
   def index
     @flow_meter = FlowMeter.new
