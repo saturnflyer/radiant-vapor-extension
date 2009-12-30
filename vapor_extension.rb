@@ -1,7 +1,7 @@
 require_dependency 'application_controller'
 
 class VaporExtension < Radiant::Extension
-  version "2.0"
+  version "#{File.read(File.expand_path(File.dirname(__FILE__)) + '/VERSION')}"
   description "Manage redirects without creating useless pages"
   url "http://saturnflyer.com/"
   
