@@ -4,14 +4,15 @@ describe Admin::FlowMetersController do
   dataset :users
   
   before(:each) do
-    login_as :developer
+    login_as :admin
   end
   
   describe "/admin/flow_meters with GET" do
     before(:each) do
       @flow_meter = mock_model(FlowMeter)
       @new_flow_meter = mock_model(FlowMeter)
-      FlowMeter.stub!(:find).with(:all).and_return([@flow_meter])
+      @flow_meters = [@flow_meter]
+      FlowMeter.stub!(:find).with(:all).and_return(@flow_meters)
       FlowMeter.stub!(:new).and_return(@new_flow_meter)
       get :index
     end
@@ -58,8 +59,7 @@ describe Admin::FlowMetersController do
   end
   describe "/admin/flow_meters/:id with DELETE" do
     before(:each) do
-      @flow_meter = FlowMeter.create!(:id => 1, :catch_url => 'this', :redirect_url => 'that', :status => '302 Found')
-      @flow_meter_count = FlowMeter.count
+      @flow_meter = FlowMeter.create!(:catch_url => 'this', :redirect_url => 'that', :status => '302 Found')
     end
     
     it "should find the flow_meter" do
@@ -68,6 +68,7 @@ describe Admin::FlowMetersController do
       delete :destroy, :id => @flow_meter.id
     end
     it "should reduce the flow_meter count by 1" do
+      @flow_meter_count = FlowMeter.count
       delete :destroy, :id => @flow_meter.id
       FlowMeter.count.should < @flow_meter_count
     end
