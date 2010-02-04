@@ -3,13 +3,13 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "radiant-vapor"
+    gem.name = "radiant-vapor-extension"
     gem.summary = %Q{Provides an interface to redirect URLs in RadiantCMS}
     gem.description = %Q{Provides an interface to redirect URLs in RadiantCMS}
     gem.email = "jim@saturnflyer.com"
     gem.homepage = "http://github.com/saturnflyer/radiant-vapor-extension"
     gem.authors = ["Jim Gay"]
-    gem.add_development_dependency "rspec-rails"
+    gem.add_development_dependency "radiant"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError

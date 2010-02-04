@@ -25,17 +25,16 @@ class VaporFlow
     end
    
     def catch_with_regexp(url)
-      result = nil
+      result = self.send_to_radiant
       FlowMeter.all.sort.reverse.each do |meter|
         key = meter[0]
         value = meter[1]
         if (match = url.match(Regexp.new('^'+key)))
           status = value[1].to_i
           redirect_url = self.match_substitute(value[0], match)
-          return [status, {"Location" => CGI.unescape(local_or_external_path(redirect_url))}, [status.to_s]]
+          result = [status, {"Location" => CGI.unescape(local_or_external_path(redirect_url))}, [status.to_s]]
+          return result
           break
-        else
-          result = self.send_to_radiant
         end
       end
       return result
