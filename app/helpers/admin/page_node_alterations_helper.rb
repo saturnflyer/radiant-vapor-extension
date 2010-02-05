@@ -1,7 +1,8 @@
 module Admin::PageNodeAlterationsHelper
   def page_type
     result = ''
-    unless @current_node.class.display_name == 'Page'
+    display_name = @current_node.class.display_name
+    unless display_name == 'Page'
       result = %{<span class="info">(#{ h(display_name) })</span>}
     end
     if flow_meter = @current_node.flow_meter
