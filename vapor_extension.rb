@@ -7,7 +7,7 @@ class VaporExtension < Radiant::Extension
   
   define_routes do |map|
     map.namespace :admin do |admin|
-      admin.resources 'flow_meters'
+      admin.resources 'flow_meters', :only => [:index, :create, :destroy]
     end
   end
   
