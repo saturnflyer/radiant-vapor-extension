@@ -1,2 +1,0 @@
-module FlowMetersHelper
-end

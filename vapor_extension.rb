@@ -28,6 +28,10 @@ class VaporExtension < Radiant::Extension
     if admin.respond_to? :help
       admin.help.index.add :page_details, 'slug_redirect', :after => 'slug'
     end
+    
+    Admin::PagesController.class_eval {
+      helper Admin::PageNodeAlterationsHelper
+    }
   end
   
   def deactivate

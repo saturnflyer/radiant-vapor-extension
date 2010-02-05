@@ -4,6 +4,8 @@
     = link_to flow_meter.redirect_url_for_display, flow_meter.local_or_external_redirect_url
     - if admin?
       - unless config['vapor.use_regexp']
-        = link_to "Remove this", admin_flow_meter_path(flow_meter), :method => :delete
+        You may 
+        = link_to "remove", admin_flow_meter_path(flow_meter), :method => :delete
+        this redirect.
       - else
         = link_to "Manage your traffic flow...", admin_flow_meters_path
