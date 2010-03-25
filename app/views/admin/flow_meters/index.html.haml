@@ -15,7 +15,7 @@
           %td= flow_meter.status
           %td= link_to "Delete", admin_flow_meter_path(flow_meter), :method => :delete
       %tr
-        %td= f.text_field :catch_url
+        %td= f.text_field :catch_url, :value => params[:new_catch]
         %td= f.text_field :redirect_url
         %td= f.select :status, ['307 Temporary Redirect','302 Found','301 Moved Permanently'].reverse
         %td= submit_tag "Create"
