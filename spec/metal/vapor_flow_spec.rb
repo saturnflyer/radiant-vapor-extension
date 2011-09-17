@@ -25,4 +25,10 @@ describe VaporFlow do
       VaporFlow.send_to_radiant.first.should == 404
     end
   end
+  describe "call" do
+    it "should return '/things' for '/'" do
+      FlowMeter.create(:catch_url => "/", :redirect_url => "/things")
+      VaporFlow.call({'PATH_INFO' => "/"}).should == [307, {"Location"=>"/things"}, ["307"]]
+    end
+  end
 end
