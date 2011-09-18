@@ -26,9 +26,22 @@ describe VaporFlow do
     end
   end
   describe "call" do
-    it "should return '/things' for '/'" do
+    before(:each) do
+      @path = {'PATH_INFO' => "/"}
+    end
+
+    it "should return an array" do
+      VaporFlow.call(@path).should be_kind_of(Array)
+    end
+
+    it "should send to radaint if blank" do
+      @path['PATH_INFO'] = ''
+      VaporFlow.call(@path).should == VaporFlow.send_to_radiant
+    end
+
+    it "should return /things for /" do
       FlowMeter.create(:catch_url => "/", :redirect_url => "/things")
-      VaporFlow.call({'PATH_INFO' => "/"}).should == [307, {"Location"=>"/things"}, ["307"]]
+      VaporFlow.call(@path).should == [307, {"Location"=>"/things"}, ["307"]]
     end
   end
 end
