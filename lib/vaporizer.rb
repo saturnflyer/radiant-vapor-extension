@@ -45,11 +45,11 @@ module Vaporizer
     def match_substitute(string, match)
       string.gsub(/\$([`&0-9'$])/) do |sub|
         case $1
-        when "`": match.pre_match
-        when "&": match[0]
-        when "0".."9": puts $1.to_i; match[$1.to_i]
-        when "'": match.post_match
-        when "$": '$'
+        when "`" then match.pre_match
+        when "&" then match[0]
+        when "0".."9" then match[$1.to_i]
+        when "'" then match.post_match
+        when "$" then '$'
         end
       end
     end
