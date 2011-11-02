@@ -40,7 +40,7 @@ describe FlowMeter do
     @flow_meter.save
     @flow_meter2 = FlowMeter.new(:catch_url => @flow_meter.catch_url, :redirect_url => '/other')
     @flow_meter2.valid?
-    @flow_meter2.errors.on(:catch_url).should match(/has already been taken/)
+    @flow_meter2.errors.on(:catch_url).should match(/this name is already in use/)
   end
   
   it "should remove the first character from catch_url beginning with a slash" do
@@ -88,7 +88,7 @@ describe FlowMeter do
     @flow_meter.save
     @flow_meter.redirect_url.should == '/'
   end
-  
+
   it "should allow a redirect_url formatted like 'http://www.saturnflyer.com/'" do
     @flow_meter.redirect_url = 'http://www.saturnflyer.com/'
     @flow_meter.save!
