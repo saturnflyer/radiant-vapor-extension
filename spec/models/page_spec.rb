@@ -14,5 +14,10 @@ describe Page do
     it "should return the first flow_meter found which matches the page url" do
       pages(:first).flow_meter.should == @redirector
     end
+    it "should redirect '/' to '/another'" do
+      @redirector[:catch_url] = "/"
+      @redirector.save
+      pages(:home).flow_meter.should == @redirector
+    end
   end
 end

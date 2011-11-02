@@ -7,10 +7,14 @@ class VaporFlow
   @@use_regexp = nil
   class << self  
     def call(env)
-      if env["PATH_INFO"].blank?
+      url = env["PATH_INFO"]
+
+      if url.blank?
         return send_to_radiant
       end
-      url = env["PATH_INFO"].sub(/^\//,'') #clean off the first slash, like it is stored in the db
+
+      url = url.sub(/^\//,'') unless url == '/' #clean off the first slash, like it is stored in the db
+
       db_escaped_key = ActiveRecord::Base.connection.adapter_name =~ /mysql/i ? '`key`' : 'key'
       sql = "SELECT * FROM config where #{db_escaped_key} = 'vapor.use_regexp'"
       if @@use_regexp.nil?
