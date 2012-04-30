@@ -1,11 +1,9 @@
 - if !@page.new_record? && (flow_meter = @page.flow_meter)
   %p
-    Visitors to this page will redirected to
+    = t('vapor.visitors_redirected')
     = link_to flow_meter.redirect_url_for_display, flow_meter.local_or_external_redirect_url
     - if admin?
       - unless config['vapor.use_regexp']
-        You may 
-        = link_to "remove", admin_flow_meter_path(flow_meter), :method => :delete
-        this redirect.
+        = link_to t('vapor.remove_this_redirect'), admin_flow_meter_path(flow_meter), :method => :delete
       - else
-        = link_to "Manage your traffic flow...", admin_flow_meters_path
+        = link_to t('vapor.manage_traffic'), admin_flow_meters_path

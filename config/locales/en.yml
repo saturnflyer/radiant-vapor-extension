@@ -1,0 +1,18 @@
+---
+en:
+  vapor:
+    catch_url: Catch URL
+    redirect_url: Redirect URL
+    action: Action
+    delete: Delete
+    create: Create
+    description: "With redirects you can create URLs that will point to content elsewhere on your site. Your 'Catch URL' is the part of the URL that will be processed to redirect to the final destination of your 'Redirect URL'."
+    description_for_regexp: "If the incoming request begins with any of your defined 'Catch URLs', the visitor will be redirected to the corresponding  'Redirect URL'. This means that you may protect an entire tree of your site simply by specifying the beginning of the URL."
+    description_for_external_redirect: "You may use a full url for the 'Redirect URL' to direct your visitors to another site."
+    http_statuses:
+      '307': '307 Temporary Redirect'
+      '302': '302 Found'
+      '301': '301 Moved Permanently'
+    visitors_redirected: 'Visitors to this page will redirected to'
+    manage_traffic: "Manage your traffic flow..."
+    remove_this_redirect: 'Remove this redirect.'
