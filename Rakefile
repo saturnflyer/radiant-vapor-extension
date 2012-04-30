@@ -1,23 +1,3 @@
-require 'rake'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "radiant-vapor-extension"
-    gem.summary = %Q{Provides an interface to redirect URLs in RadiantCMS}
-    gem.description = %Q{Provides an interface to redirect URLs in RadiantCMS}
-    gem.email = "jim@saturnflyer.com"
-    gem.homepage = "http://github.com/saturnflyer/radiant-vapor-extension"
-    gem.authors = ["Jim Gay"]
-    gem.add_development_dependency "radiant"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
-
-# task :test => :check_dependencies
-
 # Determine where the RSpec plugin is by loading the boot
 unless defined? RADIANT_ROOT
   ENV["RAILS_ENV"] = "test"
@@ -27,28 +7,26 @@ unless defined? RADIANT_ROOT
   when File.dirname(__FILE__) =~ %r{vendor/radiant/vendor/extensions}
     require "#{File.expand_path(File.dirname(__FILE__) + "/../../../../../")}/config/boot"
   else
-    boot_path = "#{File.expand_path(File.dirname(__FILE__) + "/../../../")}/config/boot"
-    require boot_path if File.exist?(boot_path)
+    require "#{File.expand_path(File.dirname(__FILE__) + "/../../../")}/config/boot"
   end
 end
 
 require 'rake'
-require 'rake/rdoctask'
+require 'rdoc/task'
 require 'rake/testtask'
 
-if defined? RADIANT_ROOT
-  rspec_base = File.expand_path(RADIANT_ROOT + '/vendor/plugins/rspec/lib')
-  $LOAD_PATH.unshift(rspec_base) if File.exist?(rspec_base)
-end
-
+rspec_base = File.expand_path(RADIANT_ROOT + '/vendor/plugins/rspec/lib')
+$LOAD_PATH.unshift(rspec_base) if File.exist?(rspec_base)
 require 'spec/rake/spectask'
+require 'cucumber'
+require 'cucumber/rake/task'
 
 # Cleanup the RADIANT_ROOT constant so specs will load the environment
-Object.send(:remove_const, :RADIANT_ROOT) if defined? RADIANT_ROOT
+Object.send(:remove_const, :RADIANT_ROOT)
 
 extension_root = File.expand_path(File.dirname(__FILE__))
 
-task :default => :spec
+task :default => [:spec, :features]
 task :stats => "spec:statsetup"
 
 desc "Run all specs in spec directory"
@@ -56,6 +34,8 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_opts = ['--options', "\"#{extension_root}/spec/spec.opts\""]
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
+
+task :features => 'spec:integration'
 
 namespace :spec do
   desc "Run all specs in spec directory with RCov"
@@ -78,6 +58,14 @@ namespace :spec do
       t.spec_opts = ['--options', "\"#{extension_root}/spec/spec.opts\""]
       t.spec_files = FileList["spec/#{sub}/**/*_spec.rb"]
     end
+  end
+  
+  desc "Run the Cucumber features"
+  Cucumber::Rake::Task.new(:integration) do |t|
+    t.fork = true
+    t.cucumber_opts = ['--format', (ENV['CUCUMBER_FORMAT'] || 'pretty')]
+    # t.feature_pattern = "#{extension_root}/features/**/*.feature"
+    t.profile = "default"
   end
 
   # Setup specs for stats
@@ -109,26 +97,12 @@ namespace :spec do
 end
 
 desc 'Generate documentation for the vapor extension.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  if File.exist?('VERSION')
-    version = File.read('VERSION')
-  else
-    version = ""
-  end
-  
+RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = "Vapor Extension #{version}"
+  rdoc.title    = 'VaporExtension'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
-# For extensions that are in transition
-desc 'Test the vapor extension.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
 end
 
 # Load any custom rakefiles for extension

@@ -1,10 +1,11 @@
-require_dependency 'application_controller'
+require_dependency "application_controller"
+require "radiant-vapor-extension"
 
 class VaporExtension < Radiant::Extension
-  version "#{File.read(File.expand_path(File.dirname(__FILE__)) + '/VERSION')}"
-  description "Manage redirects without creating useless pages"
-  url "http://saturnflyer.com/"
-    
+  version     RadiantVaporExtension::VERSION
+  description RadiantVaporExtension::DESCRIPTION
+  url         RadiantVaporExtension::URL
+
   def activate
     unless respond_to?(:tab)
       admin.tabs.add "Redirects", "/admin/flow_meters", :after => "Layouts", :visibility => [:admin]
@@ -27,9 +28,4 @@ class VaporExtension < Radiant::Extension
       helper Admin::PageNodeAlterationsHelper
     }
   end
-  
-  def deactivate
-    
-  end
-  
 end
