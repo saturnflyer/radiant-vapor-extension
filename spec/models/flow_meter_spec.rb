@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/../vapor_spec_helper'
 
 describe FlowMeter do
   dataset :pages
@@ -137,7 +137,7 @@ describe FlowMeter do
     end
     describe "while vapor.use_regexp" do
       it "should return the first flow_meter found that matches the page url" do
-        Radiant::Config['vapor.use_regexp'] = 'true'
+        Radiant::Config.stub!(:[]).with('vapor.use_regexp').and_return('true')
         @redirector = FlowMeter.create!({:catch_url => '/fi\w', :redirect_url => '/another', :status => '307'})
         FlowMeter.find_for_page(pages(:first)).should == @redirector
       end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/../vapor_spec_helper'
 
 describe VaporFlow do
   describe "radiant_path" do
