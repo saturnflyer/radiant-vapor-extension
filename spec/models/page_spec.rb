@@ -1,5 +1,5 @@
 
-require 'vapor_spec_helper'
+require File.dirname(__FILE__) + '/../../vapor_spec_helper'
 
 describe Page do
   dataset :users_and_pages
