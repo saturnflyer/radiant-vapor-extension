@@ -1,2 +1,2 @@
 cd ~/radiant
-bundle exec rake spec:extensions EXT=vapor
+bundle exec rake spec:extensions EXT=vapor --trace
