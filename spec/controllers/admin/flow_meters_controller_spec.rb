@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../vapor_spec_helper')
+require File.expand_path '../../../vapor_spec_helper', __FILE__
 
 describe Admin::FlowMetersController do
   dataset :users
