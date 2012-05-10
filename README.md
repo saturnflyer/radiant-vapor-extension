@@ -1,4 +1,4 @@
-# Vapor
+# Vapor [![Build Status](https://secure.travis-ci.org/saturnflyer/radiant-vapor-extension.png?branch=master)](http://travis-ci.org/saturnflyer/radiant-vapor-extension)
 
 The Vapor extension provides an interface to redirect URLs. 
 
