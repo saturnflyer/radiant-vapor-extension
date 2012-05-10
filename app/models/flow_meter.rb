@@ -125,7 +125,7 @@ class FlowMeter < ActiveRecord::Base
   end
   
   def clean_redirect_url
-    clean_url(:redirect_url) unless redirect_url.blank? or redirect_url.match('^http://')
+    clean_url(:redirect_url) unless redirect_url.blank? or redirect_url.match('^https?://')
   end
   
   def clean_url(att)
